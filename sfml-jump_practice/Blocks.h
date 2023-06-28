@@ -29,9 +29,11 @@ public:
 	virtual void Draw(sf::RenderWindow& window) override;
 
 	void SetBlock(int num);
+
 	void SetPlayer();
 	void HorizontalMovePlayer(float dt);
 	void SetVelocity(sf::Vector2f v);
-	void VerticalMove(float dt);
+	void VerticalMovePlayer(float dt);
+
 };
 

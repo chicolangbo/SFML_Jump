@@ -104,6 +104,8 @@ void SceneJump::Update(float dt)
 	}
 
 	player->VerticalMovePlayer(dt);
+
+	CheckCollide();
 }
 
 void SceneJump::Draw(sf::RenderWindow& window)
@@ -113,4 +115,41 @@ void SceneJump::Draw(sf::RenderWindow& window)
 
 void SceneJump::CheckCollide()
 {
+	// 플레이어 객체, 바운드 반환
+	Blocks* playerGo = (Blocks*)FindGo("Block4");
+	sf::FloatRect playerBound = playerGo->block.getGlobalBounds();
+
+	// 볼록 객체(3 빼고), 바운드 반환 => 충돌 시 플레이어 위치 세팅
+	for (int i = 0; i < BLOCKCOUNT-1; i++)
+	{
+		std::string num = std::to_string(i);
+		Blocks* blockGo = (Blocks*)FindGo("Block"+num);
+		sf::FloatRect blockBound = blockGo->block.getGlobalBounds();
+
+		if (playerBound.intersects(blockBound))
+		{
+			std::cout << "123" << std::endl;
+			playerGo->speed = 0;
+		}
+	}
+
+	//Blocks* blockGo1c = (Blocks*)FindGo("Block0");
+	//sf::FloatRect blockBound1 = blockGo1c->block.getGlobalBounds();
+	//Blocks* blockGo2c = (Blocks*)FindGo("Block1");
+	//sf::FloatRect blockBound1 = blockGo2c->block.getGlobalBounds();
+	//Blocks* blockGo3c = (Blocks*)FindGo("Block2");
+	//sf::FloatRect blockBound1 = blockGo3c->block.getGlobalBounds();
+	//Blocks* blockGo4c = (Blocks*)FindGo("Block3");
+	//sf::FloatRect blockBound1 = blockGo4c->block.getGlobalBounds();
+	//Blocks* playerGoc = (Blocks*)FindGo("Block4");
+	//sf::FloatRect playerBound = playerGoc->block.getGlobalBounds();
+
+	//sf::Vector2f leftMax = { blockBound1.left + blockBound1.width, halfHeight*2.f };
+	//sf::Vector2f RightMax = { blockBound1.left + blockBound1.width, halfHeight*2.f };
+
+	//if (blockBound1.left + blockBound1.width >= playerBound.left)
+	//{
+	//	sf::Vector2f tempPosition = playerGoc->GetPosition();
+	//	playerGoc->SetPosition(blockBound1.,tempPosition.y)
+	//}
 }
