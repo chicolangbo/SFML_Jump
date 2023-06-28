@@ -78,14 +78,32 @@ void SceneJump::Update(float dt)
 	if (INPUT_MGR.GetKey(sf::Keyboard::Left))
 	{
 		player->direction = { -1.f,0.f };
-		player->MovePlayer(dt);
+		player->HorizontalMovePlayer(dt);
+		if (INPUT_MGR.GetKeyDown(sf::Keyboard::Space))
+		{
+			sf::Vector2f v = { -1000.f,-1000.f };
+			player->SetVelocity(v);
+		}
 	}
 
 	if (INPUT_MGR.GetKey(sf::Keyboard::Right))
 	{
 		player->direction = { 1.f,0.f };
-		player->MovePlayer(dt);
+		player->HorizontalMovePlayer(dt);
+		if (INPUT_MGR.GetKeyDown(sf::Keyboard::Space))
+		{
+			sf::Vector2f v = { 1000.f,-1000.f };
+			player->SetVelocity(v);
+		}
 	}
+
+	if (INPUT_MGR.GetKeyDown(sf::Keyboard::Space))
+	{
+		sf::Vector2f v = { 0.f,-1000.f };
+		player->SetVelocity(v);
+	}
+
+	player->VerticalMovePlayer(dt);
 }
 
 void SceneJump::Draw(sf::RenderWindow& window)
@@ -94,9 +112,5 @@ void SceneJump::Draw(sf::RenderWindow& window)
 }
 
 void SceneJump::CheckCollide()
-{
-}
-
-void SceneJump::MovePlayer(float dt)
 {
 }

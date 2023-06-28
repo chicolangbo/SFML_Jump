@@ -22,6 +22,5 @@ public:
 	virtual void Draw(sf::RenderWindow& window) override;
 
 	void CheckCollide();
-	void MovePlayer(float dt);
 };
 

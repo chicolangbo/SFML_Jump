@@ -3,7 +3,7 @@
 #include "Framework.h"
 
 Blocks::Blocks(const std::string n)
-	: GameObject(n), direction(1.f,0.f), speed(500.f)
+	: GameObject(n), direction(1.f,0.f), speed(500.f), velocity(0.f,0.f), gravity(0.f, 2000.f)
 {
 }
 
@@ -54,6 +54,7 @@ void Blocks::Reset()
 
 void Blocks::Update(float dt)
 {
+
 }
 
 void Blocks::Draw(sf::RenderWindow& window)
@@ -106,10 +107,24 @@ void Blocks::SetPlayer()
 	SetPosition(halfWidth, FRAMEWORK.GetWindowSize().y);
 }
 
-void Blocks::MovePlayer(float dt)
+void Blocks::HorizontalMovePlayer(float dt)
 {
 	// 좌우 이동
 	sf::Vector2f tempPosition = GetPosition();
 	tempPosition.x += direction.x * speed * dt;
 	SetPosition(tempPosition);
+}
+
+void Blocks::SetVelocity(sf::Vector2f v)
+{
+	velocity = v;
+
+	//velocity += gravity * dt
+	//SetPosition(block.getPosition() + velocity * dt); // 여기에 넣으면 getKeyDown 한번 할 때 setPosition 한번만 됨
+}
+
+void Blocks::VerticalMovePlayer(float dt)
+{
+	velocity += gravity * dt; // 임의로 일정 시간마다 떨어질 y좌표 높이...? 속력?
+	SetPosition(block.getPosition() + velocity * dt);
 }

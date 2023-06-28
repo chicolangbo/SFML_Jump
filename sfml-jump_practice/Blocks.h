@@ -8,6 +8,8 @@ public:
 	sf::RectangleShape block;
 	sf::Vector2f direction;
 	float speed;
+	sf::Vector2f velocity;
+	sf::Vector2f gravity;
 
 	Blocks(const std::string n);
 	virtual ~Blocks() override;
@@ -28,6 +30,8 @@ public:
 
 	void SetBlock(int num);
 	void SetPlayer();
-	void MovePlayer(float dt);
+	void HorizontalMovePlayer(float dt);
+	void SetVelocity(sf::Vector2f v);
+	void VerticalMove(float dt);
 };
 
