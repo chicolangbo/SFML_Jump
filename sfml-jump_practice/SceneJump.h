@@ -2,11 +2,22 @@
 #include "Scene.h"
 #include "Blocks.h"
 
+enum class COLLIDE
+{
+	None,
+	Left,
+	Right,
+	Top,
+	Bottom
+};
+
 class SceneJump : public Scene
 {
 private:
 	float halfWidth;
 	float halfHeight;
+
+	sf::Vector2f tempPosition;
 
 public:
 	SceneJump();
@@ -21,6 +32,6 @@ public:
 	virtual void Update(float dt) override;
 	virtual void Draw(sf::RenderWindow& window) override;
 
-	void CheckCollide();
+	COLLIDE CheckCollide();
 };
 

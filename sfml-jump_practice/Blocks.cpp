@@ -89,8 +89,8 @@ void Blocks::SetBlock(int num)
 		break;
 	case 3:
 		block.setSize(sf::Vector2f(182.f, halfHeight));
-		SetOrigin(Origins::BL);
-		SetPosition(1092.f, FRAMEWORK.GetWindowSize().y);
+		SetOrigin(Origins::BR);
+		SetPosition(FRAMEWORK.GetWindowSize().x, FRAMEWORK.GetWindowSize().y);
 		break;
 	}
 }
@@ -110,9 +110,14 @@ void Blocks::SetPlayer()
 void Blocks::HorizontalMovePlayer(float dt)
 {
 	// 좌우 이동
-	sf::Vector2f tempPosition = GetPosition();
+	sf::Vector2f tempPosition = block.getPosition();
 	tempPosition.x += direction.x * speed * dt;
-	SetPosition(tempPosition);
+
+	if (tempPosition.x > 25.f
+		&& tempPosition.x <= FRAMEWORK.GetWindowSize().x - 25.f)
+	{
+		block.setPosition(tempPosition);
+	}
 }
 
 void Blocks::SetVelocity(sf::Vector2f v)
@@ -125,6 +130,22 @@ void Blocks::SetVelocity(sf::Vector2f v)
 
 void Blocks::VerticalMovePlayer(float dt)
 {
-	velocity += gravity * dt; // 임의로 일정 시간마다 떨어질 y좌표 높이...? 속력?
-	SetPosition(block.getPosition() + velocity * dt);
+	sf::Vector2f tempPosition = block.getPosition();
+	velocity += gravity * dt;
+
+	if (tempPosition.y > 0.f)
+	{
+ 		block.setPosition(tempPosition + velocity * dt);
+		if (block.getPosition().y >= FRAMEWORK.GetWindowSize().y)
+		{
+			block.setPosition(block.getPosition().x, FRAMEWORK.GetWindowSize().y);
+			velocity = { velocity.x,0 };
+		}
+	}
+
+	else if (tempPosition.y < 0.f)
+	{
+		block.setPosition(block.getPosition().x, 50.f);
+		velocity = { velocity.x, 500.f };
+	}
 }

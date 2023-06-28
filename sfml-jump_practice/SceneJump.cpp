@@ -9,7 +9,10 @@
 #define BLOCKCOUNT	5
 
 SceneJump::SceneJump()
-	: Scene(SceneId::Game), halfWidth(FRAMEWORK.GetWindowSize().x / 2.f), halfHeight(FRAMEWORK.GetWindowSize().y / 2.f)
+	: Scene(SceneId::Game),
+	halfWidth(FRAMEWORK.GetWindowSize().x / 2.f),
+	halfHeight(FRAMEWORK.GetWindowSize().y / 2.f),
+	tempPosition(0.f,0.f)
 {
 	// draw 오류 해결 용도
 	resources.push_back(std::make_tuple(ResourceTypes::Font, "fonts/DS-DIGI.ttf"));
@@ -75,6 +78,8 @@ void SceneJump::Update(float dt)
 
 	Blocks* player = (Blocks*)FindGo("Block4");
 
+	CheckCollide();
+
 	if (INPUT_MGR.GetKey(sf::Keyboard::Left))
 	{
 		player->direction = { -1.f,0.f };
@@ -104,8 +109,6 @@ void SceneJump::Update(float dt)
 	}
 
 	player->VerticalMovePlayer(dt);
-
-	CheckCollide();
 }
 
 void SceneJump::Draw(sf::RenderWindow& window)
@@ -113,43 +116,59 @@ void SceneJump::Draw(sf::RenderWindow& window)
 	Scene::Draw(window);
 }
 
-void SceneJump::CheckCollide()
+COLLIDE SceneJump::CheckCollide()
 {
 	// 플레이어 객체, 바운드 반환
 	Blocks* playerGo = (Blocks*)FindGo("Block4");
 	sf::FloatRect playerBound = playerGo->block.getGlobalBounds();
 
-	// 볼록 객체(3 빼고), 바운드 반환 => 충돌 시 플레이어 위치 세팅
+	// 블록 객체(3 빼고), 바운드 반환 => 바운드로 충돌 체크
 	for (int i = 0; i < BLOCKCOUNT-1; i++)
 	{
+		sf::FloatRect tempRect = {};
+
+		if (i == 2)
+		{
+			continue;
+		}
+
 		std::string num = std::to_string(i);
 		Blocks* blockGo = (Blocks*)FindGo("Block"+num);
 		sf::FloatRect blockBound = blockGo->block.getGlobalBounds();
 
-		if (playerBound.intersects(blockBound))
+		if (playerBound.intersects(blockBound, tempRect))
 		{
-			std::cout << "123" << std::endl;
-			playerGo->speed = 0;
+			if (tempRect.width > tempRect.height)
+			{
+				if (playerBound.top == tempRect.top)
+				{
+					playerGo->block.setPosition(playerGo->block.getPosition().x, tempRect.top + tempRect.height + 50.f);
+					playerGo->velocity = { playerGo->velocity.x, 500.f };
+
+					playerGo->gravity.y + 100.f;
+					playerGo->SetPosition(playerGo->GetPosition().x, tempRect.top + tempRect.height);
+					return COLLIDE::Bottom; // 충돌 기준은 블록
+				}
+				else if (playerBound.top > tempRect.top)
+				{
+					playerGo->SetPosition(playerGo->GetPosition().x, tempRect.top);
+					return COLLIDE::Top;
+				}
+			}
+			else if (tempRect.width < tempRect.height)
+			{
+				if (playerBound.left == tempRect.left)
+				{
+					playerGo->SetPosition(tempRect.left + tempRect.width + 25.f, playerGo->GetPosition().y);
+					return COLLIDE::Right;
+				}
+				else if (playerBound.left < tempRect.left)
+				{
+					playerGo->SetPosition(tempRect.left - 25.f, playerGo->GetPosition().y);
+					return COLLIDE::Left;
+				}
+			}
 		}
 	}
-
-	//Blocks* blockGo1c = (Blocks*)FindGo("Block0");
-	//sf::FloatRect blockBound1 = blockGo1c->block.getGlobalBounds();
-	//Blocks* blockGo2c = (Blocks*)FindGo("Block1");
-	//sf::FloatRect blockBound1 = blockGo2c->block.getGlobalBounds();
-	//Blocks* blockGo3c = (Blocks*)FindGo("Block2");
-	//sf::FloatRect blockBound1 = blockGo3c->block.getGlobalBounds();
-	//Blocks* blockGo4c = (Blocks*)FindGo("Block3");
-	//sf::FloatRect blockBound1 = blockGo4c->block.getGlobalBounds();
-	//Blocks* playerGoc = (Blocks*)FindGo("Block4");
-	//sf::FloatRect playerBound = playerGoc->block.getGlobalBounds();
-
-	//sf::Vector2f leftMax = { blockBound1.left + blockBound1.width, halfHeight*2.f };
-	//sf::Vector2f RightMax = { blockBound1.left + blockBound1.width, halfHeight*2.f };
-
-	//if (blockBound1.left + blockBound1.width >= playerBound.left)
-	//{
-	//	sf::Vector2f tempPosition = playerGoc->GetPosition();
-	//	playerGoc->SetPosition(blockBound1.,tempPosition.y)
-	//}
+	return COLLIDE::None;
 }
