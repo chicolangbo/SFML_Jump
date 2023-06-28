@@ -5,9 +5,6 @@
 class SceneJump : public Scene
 {
 private:
-	int blockCount;
-	std::vector<Blocks*> blockPool; // * 블록 객체 메모리풀
-
 	float halfWidth;
 	float halfHeight;
 
@@ -26,6 +23,5 @@ public:
 
 	void CheckCollide();
 	void MovePlayer(float dt);
-	void MakeBlock();
 };
 

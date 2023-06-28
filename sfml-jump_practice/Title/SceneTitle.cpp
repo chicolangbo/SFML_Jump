@@ -67,4 +67,7 @@ void SceneTitle::Update(float dt)
 void SceneTitle::Draw(sf::RenderWindow& window)
 {
 	Scene::Draw(window);
+
+
+
 }

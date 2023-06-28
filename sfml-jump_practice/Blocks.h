@@ -6,6 +6,8 @@ class Blocks :
 private:
 public:
 	sf::RectangleShape block;
+	sf::Vector2f direction;
+	float speed;
 
 	Blocks(const std::string n);
 	virtual ~Blocks() override;
@@ -24,5 +26,8 @@ public:
 	virtual void Update(float dt) override;
 	virtual void Draw(sf::RenderWindow& window) override;
 
+	void SetBlock(int num);
+	void SetPlayer();
+	void MovePlayer(float dt);
 };
 
