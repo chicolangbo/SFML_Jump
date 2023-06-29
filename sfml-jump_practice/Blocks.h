@@ -24,6 +24,7 @@ public:
 	bool leftSideCollide;
 	bool rightSideCollide;
 	bool bottomSideCollide;
+	bool topBlockCollide;
 
 	Blocks(const std::string n);
 	virtual ~Blocks() override;
@@ -43,11 +44,8 @@ public:
 	virtual void Draw(sf::RenderWindow& window) override;
 
 	void SetBlock(int num);
-
 	void SetPlayer();
-	void HorizontalMovePlayer(float dt);
 	void SetVelocity(sf::Vector2f v);
-	void VerticalMovePlayer(float dt);
 
 	void MovePlayer(float dt);
 	void CheckBlockCollide(Blocks* blockGo);

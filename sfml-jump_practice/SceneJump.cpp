@@ -51,10 +51,6 @@ void SceneJump::Enter()
 {
 	Scene::Enter();
 	
-	// draw 오류 해결용도
-	TextGo* titleGo = (TextGo*)FindGo("Title");
-	titleGo->text.setFont(*RESOURCE_MGR.GetFont("fonts/DS-DIGI.ttf"));
-
 	// blockGo 세팅
 	for (int i = 0; i < BLOCKCOUNT; i++)
 	{
@@ -79,13 +75,13 @@ void SceneJump::Update(float dt)
 
 	Blocks* player = (Blocks*)FindGo("Block4");
 
-	if (player->bottomSideCollide)
+	if (player->bottomSideCollide || player->topBlockCollide)
 	{
 		isJump = false;
 	}
-	else if (!player->bottomSideCollide)
+	else if (!player->bottomSideCollide && !player->topBlockCollide)
 	{
-		isJump = true;
+ 		isJump = true;
 	}
 	if (!isJump)
 	{
@@ -126,6 +122,10 @@ void SceneJump::Update(float dt)
 
 		player->CheckSideCollide();
 		player->CheckBlockCollide(blockGo);
+		if (player->topBlockCollide)
+		{
+			break;
+		}
 	}
 
 	player->MovePlayer(dt);
