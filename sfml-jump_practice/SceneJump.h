@@ -2,15 +2,6 @@
 #include "Scene.h"
 #include "Blocks.h"
 
-enum class COLLIDE
-{
-	None,
-	Left,
-	Right,
-	Top,
-	Bottom
-};
-
 class SceneJump : public Scene
 {
 private:

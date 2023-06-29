@@ -36,6 +36,7 @@ void Framework::Draw()
 void Framework::Run()
 {
     Init(screenWidth, screenHeight, title);
+    //window.setFramerateLimit(100);
     clock.restart();
     while (window.isOpen())
     {

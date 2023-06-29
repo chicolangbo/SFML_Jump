@@ -78,37 +78,41 @@ void SceneJump::Update(float dt)
 
 	Blocks* player = (Blocks*)FindGo("Block4");
 
-	CheckCollide();
-
 	if (INPUT_MGR.GetKey(sf::Keyboard::Left))
 	{
 		player->direction = { -1.f,0.f };
-		player->HorizontalMovePlayer(dt);
 		if (INPUT_MGR.GetKeyDown(sf::Keyboard::Space))
 		{
 			sf::Vector2f v = { -1000.f,-1000.f };
 			player->SetVelocity(v);
 		}
 	}
-
 	if (INPUT_MGR.GetKey(sf::Keyboard::Right))
 	{
 		player->direction = { 1.f,0.f };
-		player->HorizontalMovePlayer(dt);
 		if (INPUT_MGR.GetKeyDown(sf::Keyboard::Space))
 		{
 			sf::Vector2f v = { 1000.f,-1000.f };
 			player->SetVelocity(v);
 		}
 	}
-
 	if (INPUT_MGR.GetKeyDown(sf::Keyboard::Space))
 	{
+		player->direction = { 0.f,0.f };
 		sf::Vector2f v = { 0.f,-1000.f };
 		player->SetVelocity(v);
 	}
 
-	player->VerticalMovePlayer(dt);
+	for (int i = 0; i < BLOCKCOUNT - 1; i++)
+	{
+		std::string num = std::to_string(i);
+		Blocks* blockGo = (Blocks*)FindGo("Block" + num);
+
+		player->CheckSideCollide();
+		player->CheckBlockCollide(blockGo);
+	}
+
+	player->MovePlayer(dt);
 }
 
 void SceneJump::Draw(sf::RenderWindow& window)
@@ -116,59 +120,51 @@ void SceneJump::Draw(sf::RenderWindow& window)
 	Scene::Draw(window);
 }
 
-COLLIDE SceneJump::CheckCollide()
-{
-	// 플레이어 객체, 바운드 반환
-	Blocks* playerGo = (Blocks*)FindGo("Block4");
-	sf::FloatRect playerBound = playerGo->block.getGlobalBounds();
-
-	// 블록 객체(3 빼고), 바운드 반환 => 바운드로 충돌 체크
-	for (int i = 0; i < BLOCKCOUNT-1; i++)
-	{
-		sf::FloatRect tempRect = {};
-
-		if (i == 2)
-		{
-			continue;
-		}
-
-		std::string num = std::to_string(i);
-		Blocks* blockGo = (Blocks*)FindGo("Block"+num);
-		sf::FloatRect blockBound = blockGo->block.getGlobalBounds();
-
-		if (playerBound.intersects(blockBound, tempRect))
-		{
-			if (tempRect.width > tempRect.height)
-			{
-				if (playerBound.top == tempRect.top)
-				{
-					playerGo->block.setPosition(playerGo->block.getPosition().x, tempRect.top + tempRect.height + 50.f);
-					playerGo->velocity = { playerGo->velocity.x, 500.f };
-
-					playerGo->gravity.y + 100.f;
-					playerGo->SetPosition(playerGo->GetPosition().x, tempRect.top + tempRect.height);
-					return COLLIDE::Bottom; // 충돌 기준은 블록
-				}
-				else if (playerBound.top > tempRect.top)
-				{
-					playerGo->SetPosition(playerGo->GetPosition().x, tempRect.top);
-					return COLLIDE::Top;
-				}
-			}
-			else if (tempRect.width < tempRect.height)
-			{
-				if (playerBound.left == tempRect.left)
-				{
-					playerGo->SetPosition(tempRect.left + tempRect.width + 25.f, playerGo->GetPosition().y);
-					return COLLIDE::Right;
-				}
-				else if (playerBound.left < tempRect.left)
-				{
-					playerGo->SetPosition(tempRect.left - 25.f, playerGo->GetPosition().y);
-					return COLLIDE::Left;
-				}
-			}
-		}
-	}
-	return COLLIDE::None;
-}
+//COLLIDE SceneJump::CheckCollide()
+//{
+//	// 플레이어 객체, 바운드 반환
+//	Blocks* playerGo = (Blocks*)FindGo("Block4");
+//	sf::FloatRect playerBound = playerGo->block.getGlobalBounds();
+//
+//	// 블록 객체(3 빼고), 바운드 반환 => 바운드로 충돌 체크
+//	for (int i = 0; i < BLOCKCOUNT-1; i++)
+//	{
+//		std::string num = std::to_string(i);
+//		Blocks* blockGo = (Blocks*)FindGo("Block"+num);
+//
+//		if (playerBound.intersects(blockBound, tempRect))
+//		{
+//			if (tempRect.width > tempRect.height)
+//			{
+//				if (playerBound.top == tempRect.top)
+//				{
+//					playerGo->block.setPosition(playerGo->block.getPosition().x, tempRect.top + tempRect.height + 50.f);
+//					playerGo->velocity = { playerGo->velocity.x, 500.f };
+//
+//					playerGo->gravity.y + 100.f;
+//					playerGo->SetPosition(playerGo->GetPosition().x, tempRect.top + tempRect.height);
+//					return COLLIDE::Bottom; // 충돌 기준은 블록
+//				}
+//				else if (playerBound.top > tempRect.top)
+//				{
+//					playerGo->SetPosition(playerGo->GetPosition().x, tempRect.top);
+//					return COLLIDE::Top;
+//				}
+//			}
+//			else if (tempRect.width < tempRect.height)
+//			{
+//				if (playerBound.left == tempRect.left)
+//				{
+//					playerGo->SetPosition(tempRect.left + tempRect.width + 25.f, playerGo->GetPosition().y);
+//					return COLLIDE::Right;
+//				}
+//				else if (playerBound.left < tempRect.left)
+//				{
+//					playerGo->SetPosition(tempRect.left - 25.f, playerGo->GetPosition().y);
+//					return COLLIDE::Left;
+//				}
+//			}
+//		}
+//	}
+//	return COLLIDE::None;
+//}

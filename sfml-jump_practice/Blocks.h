@@ -1,5 +1,15 @@
 #pragma once
 #include "GameObject.h"
+
+enum class COLLIDE
+{
+	NONE,
+	TOPBLOCK,
+	LEFTBLOCK,
+	RIGHTBLOCK,
+	BOTTOMBLOCK,
+};
+
 class Blocks :
     public GameObject
 {
@@ -10,6 +20,10 @@ public:
 	float speed;
 	sf::Vector2f velocity;
 	sf::Vector2f gravity;
+	bool topSideCollide;
+	bool leftSideCollide;
+	bool rightSideCollide;
+	bool bottomSideCollide;
 
 	Blocks(const std::string n);
 	virtual ~Blocks() override;
@@ -35,5 +49,8 @@ public:
 	void SetVelocity(sf::Vector2f v);
 	void VerticalMovePlayer(float dt);
 
+	void MovePlayer(float dt);
+	COLLIDE CheckBlockCollide(Blocks* blockGo);
+	void CheckSideCollide();
 };
 
