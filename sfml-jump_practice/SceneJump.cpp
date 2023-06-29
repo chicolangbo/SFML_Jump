@@ -87,7 +87,6 @@ void SceneJump::Update(float dt)
 	{
 		isJump = true;
 	}
-
 	if (!isJump)
 	{
 		player->direction = { 0.f,0.f };

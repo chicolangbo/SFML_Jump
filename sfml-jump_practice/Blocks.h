@@ -50,7 +50,7 @@ public:
 	void VerticalMovePlayer(float dt);
 
 	void MovePlayer(float dt);
-	COLLIDE CheckBlockCollide(Blocks* blockGo);
+	void CheckBlockCollide(Blocks* blockGo);
 	void CheckSideCollide();
 };
 

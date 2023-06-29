@@ -170,12 +170,19 @@ void Blocks::MovePlayer(float dt)
 	tempPosition.x += direction.x * speed * dt;
 
 	// 상하 이동
-	velocity += gravity * dt;
+	if (velocity == sf::Vector2f{ 0.f,0.f })
+	{
+		velocity = { 0.f,0.f };
+	}
+	else
+	{
+		velocity += gravity * dt;
+	}
 
 	block.setPosition(tempPosition + velocity * dt);
 }
 
-COLLIDE Blocks::CheckBlockCollide(Blocks* blockGo)
+void Blocks::CheckBlockCollide(Blocks* blockGo)
 {
 	sf::FloatRect playerBound = block.getGlobalBounds(); // 플레이어 객체 바운드
 	sf::FloatRect blockBound = blockGo->block.getGlobalBounds(); // 블록 객체 바운드
@@ -185,24 +192,26 @@ COLLIDE Blocks::CheckBlockCollide(Blocks* blockGo)
 	{
 		if (tempRect.width > tempRect.height)
 		{
-			if (playerBound.top == tempRect.top)
+			if (playerBound.top == tempRect.top) // bottom
 			{
-				return COLLIDE::BOTTOMBLOCK;
+				block.setPosition(block.getPosition().x, blockBound.top + blockBound.height + 50.f);
+				velocity = { 0.f, 100.f };
 			}
-			else if (playerBound.top > tempRect.top)
+			else if (playerBound.top < tempRect.top) // top
 			{
-				return COLLIDE::TOPBLOCK;
+				block.setPosition(block.getPosition().x, blockBound.top);
+				velocity = { 0.f, 0.f };
 			}
 		}
 		else if (tempRect.width < tempRect.height)
 		{
-			if (playerBound.left == tempRect.left)
+			if (playerBound.left == tempRect.left) // right
 			{
-				return COLLIDE::RIGHTBLOCK;
+				block.setPosition(blockBound.left+blockBound.width + 25.f, block.getPosition().y);
 			}
-			else if (playerBound.left < tempRect.left)
+			else if (playerBound.left < tempRect.left) // left
 			{
-				return COLLIDE::LEFTBLOCK;
+				block.setPosition(blockBound.left - 25.f, block.getPosition().y);
 			}
 		}
 	}
@@ -220,7 +229,7 @@ void Blocks::CheckSideCollide()
 	if (topSideCollide)
 	{
 		block.setPosition(block.getPosition().x, 50.f);
-		velocity = { 0.f, 300.f };
+		velocity = { 0.f, 100.f };
 	}
 
 	if (bottomSideCollide)
