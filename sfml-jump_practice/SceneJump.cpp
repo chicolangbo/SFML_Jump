@@ -7,6 +7,7 @@
 #include <string>
 
 #define BLOCKCOUNT	5
+#define POTALBLOCK	2
 
 SceneJump::SceneJump()
 	: Scene(SceneId::Game),
@@ -116,22 +117,17 @@ void SceneJump::Update(float dt)
 		player->MovePlayer(dt);
 	}
 
-	// 충돌 체크
+	// 기본 블록 충돌 체크
 	for (int i = 0; i < BLOCKCOUNT - 1; i++)
 	{
 		std::string num = std::to_string(i);
 		Blocks* blockGo = (Blocks*)FindGo("Block" + num);
 
-		if (i == 2)
+		if (i == POTALBLOCK)
 		{
-			player->SCheckBlockCollide(blockGo);
-			if (player->topBlockCollide)
-			{
-				break;
-			}
+			continue;
 		}
 
-		// else 처리하면, "Block2"가 블록 바닥 충돌 안 했을 때 다른 면 체크 불가
 		player->CheckSideCollide();
 		player->CheckBlockCollide(blockGo);
 		if (player->topBlockCollide)
@@ -139,6 +135,12 @@ void SceneJump::Update(float dt)
 			break;
 		}
 	}
+
+	// 포탈 블록 충돌 체크
+	std::string num = std::to_string(POTALBLOCK);
+	Blocks* blockGo = (Blocks*)FindGo("Block" + num);
+	player->SCheckBlockCollide(blockGo);
+	player->CheckSideCollide();
 
 	player->MovePlayer(dt);
 }

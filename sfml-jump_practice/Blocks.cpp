@@ -197,7 +197,6 @@ void Blocks::SCheckBlockCollide(Blocks* blockGo)
 	//	}
 	//}
 
-
 	// ±è¹ÎÁö
 	if (playerBound.intersects(blockBound, tempRect))
 	{
@@ -206,8 +205,8 @@ void Blocks::SCheckBlockCollide(Blocks* blockGo)
 			if (playerBound.top == tempRect.top) // bottom
 			{
 				std::cout << "¾Æ·§¸é" << std::endl;
-				velocity = { 0.f, -1000.f };
-				topBlockCollide = true;
+				velocity = { 0.f, -500.f };
+				//topBlockCollide = true;
 			}
 
 		}
