@@ -3,7 +3,7 @@
 #include "Framework.h"
 
 Blocks::Blocks(const std::string n)
-	: GameObject(n), direction(1.f,0.f), speed(500.f), velocity(0.f,0.f), gravity(0.f, 2000.f)
+	: GameObject(n), direction(0.f,0.f), speed(300.f), velocity(0.f,0.f), gravity(0.f, 2000.f)
 {
 }
 
@@ -226,7 +226,7 @@ void Blocks::CheckSideCollide()
 	if (bottomSideCollide)
 	{
 		block.setPosition(block.getPosition().x, FRAMEWORK.GetWindowSize().y);
-		/*velocity = { 0.f, -1000.f };*/
+		velocity = { 0.f, 0.f };
 	}
 
 	if (leftSideCollide)

@@ -12,7 +12,8 @@ SceneJump::SceneJump()
 	: Scene(SceneId::Game),
 	halfWidth(FRAMEWORK.GetWindowSize().x / 2.f),
 	halfHeight(FRAMEWORK.GetWindowSize().y / 2.f),
-	tempPosition(0.f,0.f)
+	tempPosition(0.f,0.f),
+	isJump(false)
 {
 	// draw 오류 해결 용도
 	resources.push_back(std::make_tuple(ResourceTypes::Font, "fonts/DS-DIGI.ttf"));
@@ -78,6 +79,20 @@ void SceneJump::Update(float dt)
 
 	Blocks* player = (Blocks*)FindGo("Block4");
 
+	if (player->bottomSideCollide)
+	{
+		isJump = false;
+	}
+	else if (!player->bottomSideCollide)
+	{
+		isJump = true;
+	}
+
+	if (!isJump)
+	{
+		player->direction = { 0.f,0.f };
+	}
+
 	if (INPUT_MGR.GetKey(sf::Keyboard::Left))
 	{
 		player->direction = { -1.f,0.f };
@@ -96,11 +111,13 @@ void SceneJump::Update(float dt)
 			player->SetVelocity(v);
 		}
 	}
+
 	if (INPUT_MGR.GetKeyDown(sf::Keyboard::Space))
 	{
 		player->direction = { 0.f,0.f };
 		sf::Vector2f v = { 0.f,-1000.f };
 		player->SetVelocity(v);
+		player->MovePlayer(dt);
 	}
 
 	for (int i = 0; i < BLOCKCOUNT - 1; i++)

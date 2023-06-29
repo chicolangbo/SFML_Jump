@@ -7,6 +7,7 @@ class SceneJump : public Scene
 private:
 	float halfWidth;
 	float halfHeight;
+	bool isJump;
 
 	sf::Vector2f tempPosition;
 
