@@ -50,5 +50,6 @@ public:
 	void MovePlayer(float dt);
 	void CheckBlockCollide(Blocks* blockGo);
 	void CheckSideCollide();
+	void SCheckBlockCollide(Blocks* blockGo);
 };
 

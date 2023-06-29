@@ -75,6 +75,7 @@ void SceneJump::Update(float dt)
 
 	Blocks* player = (Blocks*)FindGo("Block4");
 
+	// 점프중인지 체크
 	if (player->bottomSideCollide || player->topBlockCollide)
 	{
 		isJump = false;
@@ -88,6 +89,7 @@ void SceneJump::Update(float dt)
 		player->direction = { 0.f,0.f };
 	}
 
+	// 입력
 	if (INPUT_MGR.GetKey(sf::Keyboard::Left))
 	{
 		player->direction = { -1.f,0.f };
@@ -106,7 +108,6 @@ void SceneJump::Update(float dt)
 			player->SetVelocity(v);
 		}
 	}
-
 	if (INPUT_MGR.GetKeyDown(sf::Keyboard::Space))
 	{
 		player->direction = { 0.f,0.f };
@@ -115,11 +116,22 @@ void SceneJump::Update(float dt)
 		player->MovePlayer(dt);
 	}
 
+	// 충돌 체크
 	for (int i = 0; i < BLOCKCOUNT - 1; i++)
 	{
 		std::string num = std::to_string(i);
 		Blocks* blockGo = (Blocks*)FindGo("Block" + num);
 
+		if (i == 2)
+		{
+			player->SCheckBlockCollide(blockGo);
+			if (player->topBlockCollide)
+			{
+				break;
+			}
+		}
+
+		// else 처리하면, "Block2"가 블록 바닥 충돌 안 했을 때 다른 면 체크 불가
 		player->CheckSideCollide();
 		player->CheckBlockCollide(blockGo);
 		if (player->topBlockCollide)
@@ -135,52 +147,3 @@ void SceneJump::Draw(sf::RenderWindow& window)
 {
 	Scene::Draw(window);
 }
-
-//COLLIDE SceneJump::CheckCollide()
-//{
-//	// 플레이어 객체, 바운드 반환
-//	Blocks* playerGo = (Blocks*)FindGo("Block4");
-//	sf::FloatRect playerBound = playerGo->block.getGlobalBounds();
-//
-//	// 블록 객체(3 빼고), 바운드 반환 => 바운드로 충돌 체크
-//	for (int i = 0; i < BLOCKCOUNT-1; i++)
-//	{
-//		std::string num = std::to_string(i);
-//		Blocks* blockGo = (Blocks*)FindGo("Block"+num);
-//
-//		if (playerBound.intersects(blockBound, tempRect))
-//		{
-//			if (tempRect.width > tempRect.height)
-//			{
-//				if (playerBound.top == tempRect.top)
-//				{
-//					playerGo->block.setPosition(playerGo->block.getPosition().x, tempRect.top + tempRect.height + 50.f);
-//					playerGo->velocity = { playerGo->velocity.x, 500.f };
-//
-//					playerGo->gravity.y + 100.f;
-//					playerGo->SetPosition(playerGo->GetPosition().x, tempRect.top + tempRect.height);
-//					return COLLIDE::Bottom; // 충돌 기준은 블록
-//				}
-//				else if (playerBound.top > tempRect.top)
-//				{
-//					playerGo->SetPosition(playerGo->GetPosition().x, tempRect.top);
-//					return COLLIDE::Top;
-//				}
-//			}
-//			else if (tempRect.width < tempRect.height)
-//			{
-//				if (playerBound.left == tempRect.left)
-//				{
-//					playerGo->SetPosition(tempRect.left + tempRect.width + 25.f, playerGo->GetPosition().y);
-//					return COLLIDE::Right;
-//				}
-//				else if (playerBound.left < tempRect.left)
-//				{
-//					playerGo->SetPosition(tempRect.left - 25.f, playerGo->GetPosition().y);
-//					return COLLIDE::Left;
-//				}
-//			}
-//		}
-//	}
-//	return COLLIDE::None;
-//}

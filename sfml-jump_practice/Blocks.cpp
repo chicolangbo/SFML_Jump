@@ -86,6 +86,7 @@ void Blocks::SetBlock(int num)
 		block.setSize(sf::Vector2f(182.f, 100.f));
 		SetOrigin(Origins::TL);
 		SetPosition(728.f, halfHeight - 100.f);
+		block.setFillColor(sf::Color::Green);
 		break;
 	case 3:
 		block.setSize(sf::Vector2f(182.f, halfHeight));
@@ -168,6 +169,55 @@ void Blocks::CheckBlockCollide(Blocks* blockGo)
 				block.setPosition(blockBound.left - 25.f, block.getPosition().y);
 			}
 		}
+	}
+}
+
+void Blocks::SCheckBlockCollide(Blocks* blockGo)
+{
+	sf::FloatRect playerBound = block.getGlobalBounds(); // 플레이어 객체 바운드
+	sf::FloatRect blockBound = blockGo->block.getGlobalBounds(); // 블록 객체 바운드
+	sf::FloatRect tempRect;
+	topBlockCollide = false;
+
+	// 김혜준
+	//if (playerBound.intersects(blockBound, tempRect))
+	//{
+	//	if (tempRect.width > tempRect.height) // 상 하 충돌
+	//	{
+	//		bool asdasd = false;
+	//		asdasd = playerBound.top+playerBound.height >= tempRect.top;
+	//			if (asdasd) // bottom
+	//			{
+	//				topBlockCollide = true;
+	//				std::cout << "바텀충돌" << std::endl;
+	//				velocity = { 0.f, -500.f }; // 올라가는 가속도 증가
+	//				if ((playerBound.top + playerBound.height) <= tempRect.top)
+	//					asdasd = false;
+	//			}
+	//	}
+	//}
+
+
+	// 김민지
+	if (playerBound.intersects(blockBound, tempRect))
+	{
+		if (tempRect.width > tempRect.height) // 상 하 충돌 시
+		{
+			if (playerBound.top == tempRect.top) // bottom
+			{
+				std::cout << "아랫면" << std::endl;
+				velocity = { 0.f, -1000.f };
+				topBlockCollide = true;
+			}
+
+		}
+			//if (playerBound.top + playerBound.height <= blockBound.top)
+			//{
+			//	std::cout << "윗면" << std::endl;
+			//	block.setPosition(block.getPosition().x, blockBound.top);
+			//	velocity = { 0.f, 100.f };
+			//	topBlockCollide = true;
+			//}
 	}
 }
 
