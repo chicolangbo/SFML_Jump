@@ -20,11 +20,15 @@ public:
 	float speed;
 	sf::Vector2f velocity;
 	sf::Vector2f gravity;
+
 	bool topSideCollide;
 	bool leftSideCollide;
 	bool rightSideCollide;
 	bool bottomSideCollide;
+
 	bool topBlockCollide;
+	bool bottomBlockCollide;
+	bool isPass;
 
 	Blocks(const std::string n);
 	virtual ~Blocks() override;

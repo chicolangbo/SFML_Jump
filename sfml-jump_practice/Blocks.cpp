@@ -1,9 +1,12 @@
 #include "stdafx.h"
 #include "Blocks.h"
 #include "Framework.h"
+#include "InputMgr.h"
 
 Blocks::Blocks(const std::string n)
-	: GameObject(n), direction(0.f,0.f), speed(300.f), velocity(0.f,0.f), gravity(0.f, 2000.f)
+	: GameObject(n), direction(0.f,0.f), speed(300.f), velocity(0.f,0.f), gravity(0.f, 2000.f),
+	topSideCollide(false), leftSideCollide(false), rightSideCollide(false), bottomSideCollide(false),
+	topBlockCollide(false), isPass(false)
 {
 }
 
@@ -122,7 +125,7 @@ void Blocks::MovePlayer(float dt)
 	sf::Vector2f tempPosition = block.getPosition();
 	tempPosition.x += direction.x * speed * dt;
 
-	// 상하 이동
+	//상하 이동
 	if (velocity == sf::Vector2f{ 0.f,0.f })
 	{
 		velocity = { 0.f,0.f };
@@ -179,44 +182,17 @@ void Blocks::SCheckBlockCollide(Blocks* blockGo)
 	sf::FloatRect tempRect;
 	topBlockCollide = false;
 
-	// 김혜준
-	//if (playerBound.intersects(blockBound, tempRect))
-	//{
-	//	if (tempRect.width > tempRect.height) // 상 하 충돌
-	//	{
-	//		bool asdasd = false;
-	//		asdasd = playerBound.top+playerBound.height >= tempRect.top;
-	//			if (asdasd) // bottom
-	//			{
-	//				topBlockCollide = true;
-	//				std::cout << "바텀충돌" << std::endl;
-	//				velocity = { 0.f, -500.f }; // 올라가는 가속도 증가
-	//				if ((playerBound.top + playerBound.height) <= tempRect.top)
-	//					asdasd = false;
-	//			}
-	//	}
-	//}
-
-	// 김민지
 	if (playerBound.intersects(blockBound, tempRect))
 	{
-		if (tempRect.width > tempRect.height) // 상 하 충돌 시
+		if (playerBound.top < tempRect.top)
 		{
-			if (playerBound.top == tempRect.top) // bottom
+			if (playerBound.top + playerBound.height >= blockBound.top && velocity.y > 0)
 			{
-				std::cout << "아랫면" << std::endl;
-				velocity = { 0.f, -500.f };
-				//topBlockCollide = true;
+				block.setPosition(block.getPosition().x, blockBound.top);
+				velocity = { 0.f, 100.f };
+				topBlockCollide = true;
 			}
-
 		}
-			//if (playerBound.top + playerBound.height <= blockBound.top)
-			//{
-			//	std::cout << "윗면" << std::endl;
-			//	block.setPosition(block.getPosition().x, blockBound.top);
-			//	velocity = { 0.f, 100.f };
-			//	topBlockCollide = true;
-			//}
 	}
 }
 
